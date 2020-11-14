@@ -1,0 +1,24 @@
+{
+  "name": "trans4m",
+  "version": "0.0.1",
+  "description": "Typesafe library for transforming simple objects from one type to another",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChuckJonas/trans4m.git"
+  },
+  "keywords": [
+    "etl",
+    "transform",
+    "typescript"
+  ],
+  "author": "charlie jonas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ChuckJonas/trans4m/issues"
+  },
+  "homepage": "https://github.com/ChuckJonas/trans4m#readme"
+}
