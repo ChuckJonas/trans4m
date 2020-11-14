@@ -13,7 +13,7 @@ type Foo = {
 type Bar = {
   foo: string;
   bar: boolean;
-  fooBar: number;
+  fooBar?: number;
 };
 
 test('foo -> bar', () => {
@@ -29,4 +29,22 @@ test('foo -> bar', () => {
   expect(bar.foo).toBe(foo.bar);
   expect(bar.bar).toBe(true);
   expect(bar.fooBar).toBe(foo.fooBar);
+});
+
+test('foo[] -> bar', () => {
+  const mapping: Trans4mMapping<Foo[], Bar> = {
+    foo: (obj) => obj.map((o) => o.bar).join(' '),
+    bar: true,
+    fooBar: (obj) => obj.reduce((sum, obj) => sum + obj.fooBar, 0),
+  };
+
+  const foosBarMapper = createTrans4m(mapping);
+  const foos = [
+    { foo: true, bar: 'hello', fooBar: 3 },
+    { foo: false, bar: 'john', fooBar: 2 },
+  ];
+  const bar = foosBarMapper(foos, {});
+  expect(bar.foo).toBe('hello john');
+  expect(bar.bar).toBe(true);
+  expect(bar.fooBar).toBe(5);
 });
