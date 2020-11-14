@@ -1,4 +1,4 @@
-import { value, copy, translate, createTrans4m, Trans4mMapping } from '../src';
+import { value, copy, translate, createTrans4m, Trans4mMapping, reduce, map } from '../src';
 
 test('1=1', () => {
   expect(value(1)()).toBe(1);
@@ -14,6 +14,7 @@ type Bar = {
   foo: string;
   bar: boolean;
   fooBar?: number;
+  arr?: boolean[];
 };
 
 test('foo -> bar', () => {
@@ -33,9 +34,10 @@ test('foo -> bar', () => {
 
 test('foo[] -> bar', () => {
   const mapping: Trans4mMapping<Foo[], Bar> = {
-    foo: (obj) => obj.map((o) => o.bar).join(' '),
+    foo: (objs) => objs.map((o) => o.bar).join(' '),
     bar: true,
-    fooBar: (obj) => obj.reduce((sum, obj) => sum + obj.fooBar, 0),
+    fooBar: reduce((sum, obj) => sum + obj.fooBar, 0),
+    arr: map((o) => o.foo),
   };
 
   const foosBarMapper = createTrans4m(mapping);
@@ -47,4 +49,5 @@ test('foo[] -> bar', () => {
   expect(bar.foo).toBe('hello john');
   expect(bar.bar).toBe(true);
   expect(bar.fooBar).toBe(5);
+  expect(bar.arr.length).toBe(2);
 });

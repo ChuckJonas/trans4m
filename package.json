@@ -1,6 +1,6 @@
 {
   "name": "trans4m",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typesafe library for transforming simple objects from one type to another",
   "main": "dist/index.js",
   "files": [

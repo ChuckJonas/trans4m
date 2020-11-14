@@ -1,3 +1,7 @@
+/*
+  == 1-to-1 ==
+*/
+
 /**
  * Copies the same field as the specified target
  * @param obj: Source Object
@@ -20,6 +24,17 @@ export function copyCurry<S, R>(fn1: (field: keyof S) => (obj: S) => R) {
     return fn1(field)(obj);
   };
 }
+
+/*
+  == Collections ==
+*/
+
+export const map = <S, R>(fn: (obj: S, i?: number, arr?: S[]) => R) => (objects: S[]) => objects.map(fn);
+export const reduce = <S, R>(fn: (result: R, obj: S, i?: number, arr?: S[]) => R, init: R) => (objects: S[]) => objects.reduce(fn, init);
+
+/*
+  == Misc ==
+*/
 
 /**
  * Just returns the passed in value
