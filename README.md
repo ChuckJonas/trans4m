@@ -19,9 +19,14 @@ At it's core the library is very simple:
 [CodeSandbox.io Link](https://codesandbox.io/s/trans4m-demo-0odhx)
 
 ```ts
-import { createTrans4m, Trans4mMapping, copy } from "trans4m";
+import { createTrans4m, Trans4mMapping, copy, translate } from "trans4m";
+
+/*
+This example show mapping a Candidate to an Employee
+*/
 
 type Candidate = {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -29,25 +34,30 @@ type Candidate = {
 };
 
 type Employee = {
+  id: string;
+  canidateId: string;
   name: string;
   email: string;
   totalScore: number;
 };
 
-//1 define mappings
+//== 1 define mappings
 
 const mapping: Trans4mMapping<Candidate, Employee> = {
-  email: copy,
+  id: "e-1",
+  canidateId: translate("id"),
   name: (obj) => obj.firstName + " " + obj.lastName,
+  email: copy,
   totalScore: (obj) => obj.scores.reduce((sum, s) => sum + s, 0)
 };
 
-//2 create trans4m function
+//== 2 create trans4m function
 
 const canidateToEmployee = createTrans4m(mapping);
 
-//3 transform objects
+//== 3 transform objects
 const c: Candidate = {
+  id: "c-1",
   firstName: "john",
   lastName: "doe",
   email: "john@example.com",
