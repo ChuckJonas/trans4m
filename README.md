@@ -2,6 +2,8 @@
 
 A typed library for transforming properties from one object onto another.  Built to help with the transform step of Extract-Transform-Load.
 
+The primarily goal of this library is to maximize readability and reduce state via a declarative API.
+
 ## Install
 
 `npm -i trans4m`
@@ -11,7 +13,7 @@ A typed library for transforming properties from one object onto another.  Built
 At it's core the library is very simple:
 
 1. Define Mappings
-2. create `trans4m` function
+2. create a `trans4m` function
 3. transform objects
 
 ### Example 
@@ -19,7 +21,14 @@ At it's core the library is very simple:
 [CodeSandbox.io Link](https://codesandbox.io/s/trans4m-demo-0odhx)
 
 ```ts
-import { createTrans4m, Trans4mMapping, copy, translate } from "trans4m";
+import {
+  createTrans4m,
+  Trans4mMapping,
+  copy,
+  translate,
+  select,
+  reduce
+} from "trans4m";
 
 /*
 This example show mapping a Candidate to an Employee
@@ -35,25 +44,33 @@ type Candidate = {
 
 type Employee = {
   id: string;
-  canidateId: string;
+  candidateId: string;
   name: string;
   email: string;
-  totalScore: number;
+  scoreCount: number;
+  scoreTotal: number;
+  averageScore: number;
 };
 
 //== 1 define mappings
 
+const withScores = select((c: Candidate) => c.scores);
+const scoreCount = withScores((scores) => scores.length);
+const scoreTotal = withScores(reduce((sum, s) => sum + s, 0));
+
 const mapping: Trans4mMapping<Candidate, Employee> = {
   id: "e-1",
-  canidateId: translate("id"),
+  candidateId: translate("id"),
   name: (obj) => obj.firstName + " " + obj.lastName,
   email: copy,
-  totalScore: (obj) => obj.scores.reduce((sum, s) => sum + s, 0)
+  scoreTotal,
+  scoreCount,
+  averageScore: (obj) => scoreTotal(obj) / scoreCount(obj)
 };
 
 //== 2 create trans4m function
 
-const canidateToEmployee = createTrans4m(mapping);
+const candidateToEmployee = createTrans4m(mapping);
 
 //== 3 transform objects
 const c: Candidate = {
@@ -61,12 +78,11 @@ const c: Candidate = {
   firstName: "john",
   lastName: "doe",
   email: "john@example.com",
-  scores: [1, 3, 5]
+  scores: [6, 7, 5]
 };
 
-const employee = canidateToEmployee(c, {});
+const employee = candidateToEmployee(c, {});
 ```
 
-### Mapping Functions
 
-== documentation coming soon ==
+
